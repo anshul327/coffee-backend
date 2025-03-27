@@ -28,4 +28,14 @@ app.use(express.static("public"))
 // Useful for handling user authentication sessions and preferences.
 app.use(cookieParser())
 
+
+
+// routes import
+
+import userRouter from './routes/user.routes.js'
+
+// routes declaration
+// this middleware (.get) gives control to userRoute as soon as /users is visited
+app.use("/api/v1/users", userRouter)
+
 export { app }
