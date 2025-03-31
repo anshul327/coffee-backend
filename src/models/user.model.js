@@ -65,7 +65,8 @@ const userSchema = new Schema(
 // "save" with pre hook means, before saving DataBase
 // donot use () => {} as callBack here as it donot has referece i.e. this
 // async used as encryption takes time
-//every middleware use next, next means pass to next when done
+// every middleware use next, next means pass to next when done
+// middlewares : Used to execute code before or after a document is saved, updated, or deleted. 
 
 userSchema.pre("save", async function(next) {
     // first check, if password is modified then only encrypt again
@@ -75,11 +76,13 @@ userSchema.pre("save", async function(next) {
     next()
 })
 
+//  Methods defined within userSchema.methods become functions that can be called on individual documents (instances) of the model created from that schema.
 userSchema.methods.isPasswordCorrect = async function(password) {
     return await bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.generateAccessTokens = function(){
+// access tokens are short lived
+userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             _id: this._id, // collected from mongoDB
@@ -94,7 +97,8 @@ userSchema.methods.generateAccessTokens = function(){
     )
 }
 
-userSchema.methods.generateRefreshTokens = function(){
+// refresh tokens are long lived
+userSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
             _id: this._id, // collected from mongoDB
